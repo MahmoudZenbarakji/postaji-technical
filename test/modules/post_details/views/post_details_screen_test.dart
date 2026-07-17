@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+import 'package:posts_explorer/core/controllers/favorites_controller.dart';
 import 'package:posts_explorer/data/models/comment.dart';
 import 'package:posts_explorer/data/models/post.dart';
 import 'package:posts_explorer/data/repositories/post_repository.dart';
@@ -22,6 +23,7 @@ void main() {
     body: 'A thoughtful comment.',
   );
 
+  setUp(() => Get.put(FavoritesController()));
   tearDown(Get.reset);
 
   testWidgets('displays the selected post and its comments', (tester) async {

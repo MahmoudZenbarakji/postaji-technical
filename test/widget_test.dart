@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+import 'package:posts_explorer/core/controllers/favorites_controller.dart';
 import 'package:posts_explorer/core/network/api_exception.dart';
 import 'package:posts_explorer/core/routes/app_routes.dart';
 import 'package:posts_explorer/data/models/comment.dart';
 import 'package:posts_explorer/data/models/post.dart';
 import 'package:posts_explorer/data/repositories/post_repository.dart';
+import 'package:posts_explorer/modules/post_details/controllers/post_details_controller.dart';
+import 'package:posts_explorer/modules/post_details/views/post_details_screen.dart';
 import 'package:posts_explorer/modules/posts/controllers/posts_controller.dart';
 import 'package:posts_explorer/modules/posts/views/posts_screen.dart';
 
@@ -19,12 +22,14 @@ void main() {
     ),
   ];
 
+  setUp(() => Get.put(FavoritesController()));
   tearDown(Get.reset);
 
   testWidgets('renders posts and navigates when a card is tapped', (
     tester,
   ) async {
-    Get.put(PostsController(_FakePostRepository(() async => posts)));
+    final repository = _FakePostRepository(() async => posts);
+    Get.put(PostsController(repository));
 
     await tester.pumpWidget(
       GetMaterialApp(
@@ -32,7 +37,12 @@ void main() {
         getPages: [
           GetPage<void>(
             name: AppRoutes.postDetails,
-            page: () => const SizedBox(key: Key('details-placeholder')),
+            page: PostDetailsScreen.new,
+            binding: BindingsBuilder(() {
+              Get.lazyPut(
+                () => PostDetailsController(repository, Get.arguments as Post),
+              );
+            }),
           ),
         ],
       ),
@@ -54,7 +64,16 @@ void main() {
 
     await tester.tap(find.text('Flutter patterns'));
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key('details-placeholder')), findsOneWidget);
+    expect(find.text('Post details'), findsOneWidget);
+    expect(find.byIcon(Icons.favorite), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.favorite));
+    await tester.pump();
+    expect(find.byIcon(Icons.favorite_border), findsOneWidget);
+
+    Get.back<void>();
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.favorite_border), findsOneWidget);
   });
 
   testWidgets('shows an error and retries the request', (tester) async {

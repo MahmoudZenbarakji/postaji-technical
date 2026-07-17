@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../core/controllers/favorites_controller.dart';
 import '../../../core/utils/responsive_breakpoints.dart';
 import '../../../widgets/app_error_view.dart';
 import '../../../widgets/empty_state_view.dart';
@@ -12,10 +13,27 @@ final class PostDetailsScreen extends GetView<PostDetailsController> {
 
   static const double _maxContentWidth = 840;
 
+  FavoritesController get _favorites => Get.find<FavoritesController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Post details')),
+      appBar: AppBar(
+        title: const Text('Post details'),
+        actions: [
+          Obx(() {
+            final isFavorite = _favorites.isFavorite(controller.post.id);
+
+            return IconButton(
+              onPressed: () => _favorites.toggleFavorite(controller.post.id),
+              tooltip: isFavorite
+                  ? 'Remove from favorites'
+                  : 'Add to favorites',
+              icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
+            );
+          }),
+        ],
+      ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {

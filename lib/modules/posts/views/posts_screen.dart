@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../core/controllers/favorites_controller.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/utils/responsive_breakpoints.dart';
 import '../../../widgets/app_error_view.dart';
@@ -13,6 +14,8 @@ final class PostsScreen extends GetView<PostsController> {
   const PostsScreen({super.key});
 
   static const double _maxContentWidth = 840;
+
+  FavoritesController get _favorites => Get.find<FavoritesController>();
 
   @override
   Widget build(BuildContext context) {
@@ -93,8 +96,8 @@ final class PostsScreen extends GetView<PostsController> {
             () => PostCard(
               key: ValueKey(post.id),
               post: post,
-              isFavorite: controller.isFavorite(post.id),
-              onFavoritePressed: () => controller.toggleFavorite(post.id),
+              isFavorite: _favorites.isFavorite(post.id),
+              onFavoritePressed: () => _favorites.toggleFavorite(post.id),
               onTap: () => Get.toNamed(
                 AppRoutes.postDetailsPath(post.id),
                 arguments: post,

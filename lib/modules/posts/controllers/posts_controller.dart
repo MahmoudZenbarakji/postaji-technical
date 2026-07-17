@@ -14,7 +14,6 @@ final class PostsController extends GetxController {
   final RxList<Post> posts = <Post>[].obs;
   final RxList<Post> filteredPosts = <Post>[].obs;
   final RxString searchText = ''.obs;
-  final RxSet<int> favoriteIds = <int>{}.obs;
 
   bool get isEmpty =>
       !loading.value && error.value == null && filteredPosts.isEmpty;
@@ -54,14 +53,6 @@ final class PostsController extends GetxController {
     searchText.value = query;
     _applySearch();
   }
-
-  void toggleFavorite(int id) {
-    if (!favoriteIds.remove(id)) {
-      favoriteIds.add(id);
-    }
-  }
-
-  bool isFavorite(int id) => favoriteIds.contains(id);
 
   void _applySearch() {
     final query = searchText.value.trim().toLowerCase();

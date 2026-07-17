@@ -49,18 +49,6 @@ void main() {
     expect(controller.filteredPosts, posts);
   });
 
-  test('toggles favorite IDs', () {
-    final controller = PostsController(
-      _FakePostRepository(() async => const []),
-    );
-
-    controller.toggleFavorite(1);
-    expect(controller.isFavorite(1), isTrue);
-
-    controller.toggleFavorite(1);
-    expect(controller.isFavorite(1), isFalse);
-  });
-
   test('exposes errors and supports retry', () async {
     var shouldFail = true;
     final controller = PostsController(
