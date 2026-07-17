@@ -22,20 +22,17 @@ final class DioPostService implements PostService {
 
   @override
   Future<List<Comment>> getComments(int postId) => _getList(
-    path: ApiConstants.comments,
-    queryParameters: {'postId': postId},
+    path: ApiConstants.commentsForPost(postId),
     fromJson: Comment.fromJson,
   );
 
   Future<List<T>> _getList<T>({
     required String path,
     required T Function(Map<String, dynamic> json) fromJson,
-    Map<String, dynamic>? queryParameters,
   }) async {
     try {
       final response = await _dio.get<List<dynamic>>(
         path,
-        queryParameters: queryParameters,
         options: Options(validateStatus: (_) => true),
       );
 

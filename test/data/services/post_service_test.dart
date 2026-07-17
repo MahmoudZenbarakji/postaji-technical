@@ -20,7 +20,7 @@ void main() {
       expect(posts.single.id, 2);
     });
 
-    test('passes postId while requesting comments', () async {
+    test('requests comments from the selected post endpoint', () async {
       late RequestOptions capturedRequest;
       final dio = Dio()
         ..interceptors.add(
@@ -49,7 +49,8 @@ void main() {
 
       final comments = await service.getComments(7);
 
-      expect(capturedRequest.queryParameters, {'postId': 7});
+      expect(capturedRequest.path, '/posts/7/comments');
+      expect(capturedRequest.queryParameters, isEmpty);
       expect(comments.single.postId, 7);
     });
 

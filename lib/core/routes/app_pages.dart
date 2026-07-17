@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 import '../../modules/post_details/bindings/post_details_binding.dart';
-import '../../modules/post_details/views/post_details_page.dart';
+import '../../modules/post_details/views/post_details_screen.dart';
 import '../../modules/posts/bindings/posts_binding.dart';
 import '../../modules/posts/views/posts_screen.dart';
 import 'app_routes.dart';
@@ -15,7 +15,7 @@ abstract final class AppPages {
     ),
     GetPage<void>(
       name: AppRoutes.postDetails,
-      page: PostDetailsPage.new,
+      page: PostDetailsScreen.new,
       binding: PostDetailsBinding(),
     ),
   ];
