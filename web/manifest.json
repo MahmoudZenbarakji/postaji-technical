@@ -1,6 +1,6 @@
 {
-    "name": "technical_test_project",
-    "short_name": "technical_test_project",
+    "name": "posts_explorer",
+    "short_name": "posts_explorer",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
