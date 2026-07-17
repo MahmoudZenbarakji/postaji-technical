@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/models/post.dart';
+import '../../../widgets/favorite_icon_button.dart';
 
 final class PostCard extends StatelessWidget {
-  const PostCard({
-    required this.post,
-    required this.isFavorite,
-    required this.onTap,
-    required this.onFavoritePressed,
-    super.key,
-  });
+  const PostCard({required this.post, required this.onTap, super.key});
 
   final Post post;
-  final bool isFavorite;
   final VoidCallback onTap;
-  final VoidCallback onFavoritePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +16,7 @@ final class PostCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 8, 16),
+          padding: const EdgeInsets.fromLTRB(20, 18, 10, 20),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -35,7 +28,7 @@ final class PostCard extends StatelessWidget {
                       post.title,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 10),
                     Text(
                       post.body,
                       maxLines: 2,
@@ -45,18 +38,7 @@ final class PostCard extends StatelessWidget {
                   ],
                 ),
               ),
-              IconButton(
-                onPressed: onFavoritePressed,
-                tooltip: isFavorite
-                    ? 'Remove from favorites'
-                    : 'Add to favorites',
-                icon: Icon(
-                  isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: isFavorite
-                      ? Theme.of(context).colorScheme.error
-                      : null,
-                ),
-              ),
+              FavoriteIconButton(postId: post.id),
             ],
           ),
         ),

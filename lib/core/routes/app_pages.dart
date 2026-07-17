@@ -1,3 +1,4 @@
+import 'package:flutter/animation.dart';
 import 'package:get/get.dart';
 
 import '../../modules/post_details/bindings/post_details_binding.dart';
@@ -12,11 +13,16 @@ abstract final class AppPages {
       name: AppRoutes.posts,
       page: PostsScreen.new,
       binding: PostsBinding(),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 250),
     ),
     GetPage<void>(
       name: AppRoutes.postDetails,
       page: PostDetailsScreen.new,
       binding: PostDetailsBinding(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: const Duration(milliseconds: 320),
+      curve: Curves.easeOutCubic,
     ),
   ];
 }

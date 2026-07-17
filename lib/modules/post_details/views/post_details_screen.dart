@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../core/controllers/favorites_controller.dart';
 import '../../../core/utils/responsive_breakpoints.dart';
 import '../../../widgets/app_error_view.dart';
+import '../../../widgets/app_loading_view.dart';
 import '../../../widgets/empty_state_view.dart';
+import '../../../widgets/favorite_icon_button.dart';
 import '../controllers/post_details_controller.dart';
 import '../widgets/comment_card.dart';
 
@@ -13,25 +14,14 @@ final class PostDetailsScreen extends GetView<PostDetailsController> {
 
   static const double _maxContentWidth = 840;
 
-  FavoritesController get _favorites => Get.find<FavoritesController>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Post details'),
         actions: [
-          Obx(() {
-            final isFavorite = _favorites.isFavorite(controller.post.id);
-
-            return IconButton(
-              onPressed: () => _favorites.toggleFavorite(controller.post.id),
-              tooltip: isFavorite
-                  ? 'Remove from favorites'
-                  : 'Add to favorites',
-              icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
-            );
-          }),
+          FavoriteIconButton(postId: controller.post.id),
+          const SizedBox(width: 8),
         ],
       ),
       body: SafeArea(
@@ -58,20 +48,20 @@ final class PostDetailsScreen extends GetView<PostDetailsController> {
                         controller.post.title,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 16),
                       Text(
                         controller.post.body,
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20),
+                        padding: EdgeInsets.symmetric(vertical: 24),
                         child: Divider(),
                       ),
                       Text(
                         'Comments',
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 16),
                       ..._buildComments(),
                     ],
                   ),
@@ -89,7 +79,7 @@ final class PostDetailsScreen extends GetView<PostDetailsController> {
       return const [
         SizedBox(
           height: 240,
-          child: Center(child: CircularProgressIndicator.adaptive()),
+          child: AppLoadingView(message: 'Loading comments…'),
         ),
       ];
     }

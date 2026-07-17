@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../core/controllers/favorites_controller.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/utils/responsive_breakpoints.dart';
 import '../../../widgets/app_error_view.dart';
+import '../../../widgets/app_loading_view.dart';
 import '../../../widgets/empty_state_view.dart';
 import '../controllers/posts_controller.dart';
 import '../widgets/post_card.dart';
@@ -14,8 +14,6 @@ final class PostsScreen extends GetView<PostsController> {
   const PostsScreen({super.key});
 
   static const double _maxContentWidth = 840;
-
-  FavoritesController get _favorites => Get.find<FavoritesController>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +40,17 @@ final class PostsScreen extends GetView<PostsController> {
                   child: Column(
                     children: [
                       PostSearchField(onChanged: controller.search),
-                      const SizedBox(height: 12),
-                      Expanded(child: Obx(() => _buildContent())),
+                      const SizedBox(height: 16),
+                      Expanded(
+                        child: Obx(
+                          () => AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 280),
+                            switchInCurve: Curves.easeOut,
+                            switchOutCurve: Curves.easeIn,
+                            child: _buildContent(),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -57,11 +64,15 @@ final class PostsScreen extends GetView<PostsController> {
 
   Widget _buildContent() {
     if (controller.loading.value && controller.posts.isEmpty) {
-      return const Center(child: CircularProgressIndicator.adaptive());
+      return const AppLoadingView(
+        key: ValueKey('loading'),
+        message: 'Finding great posts…',
+      );
     }
 
     if (controller.hasError && controller.posts.isEmpty) {
       return AppErrorView(
+        key: const ValueKey('error'),
         message: controller.error.value!,
         onRetry: controller.retry,
       );
@@ -71,6 +82,7 @@ final class PostsScreen extends GetView<PostsController> {
       final isSearching = controller.searchText.value.trim().isNotEmpty;
 
       return _RefreshableState(
+        key: const ValueKey('empty'),
         onRefresh: controller.refreshPosts,
         child: EmptyStateView(
           icon: isSearching ? Icons.search_off : Icons.inbox_outlined,
@@ -83,6 +95,7 @@ final class PostsScreen extends GetView<PostsController> {
     }
 
     return RefreshIndicator(
+      key: const ValueKey('posts'),
       onRefresh: controller.refreshPosts,
       child: ListView.separated(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -92,16 +105,12 @@ final class PostsScreen extends GetView<PostsController> {
         itemBuilder: (context, index) {
           final post = controller.filteredPosts[index];
 
-          return Obx(
-            () => PostCard(
-              key: ValueKey(post.id),
-              post: post,
-              isFavorite: _favorites.isFavorite(post.id),
-              onFavoritePressed: () => _favorites.toggleFavorite(post.id),
-              onTap: () => Get.toNamed(
-                AppRoutes.postDetailsPath(post.id),
-                arguments: post,
-              ),
+          return PostCard(
+            key: ValueKey(post.id),
+            post: post,
+            onTap: () => Get.toNamed(
+              AppRoutes.postDetailsPath(post.id),
+              arguments: post,
             ),
           );
         },
@@ -111,7 +120,11 @@ final class PostsScreen extends GetView<PostsController> {
 }
 
 final class _RefreshableState extends StatelessWidget {
-  const _RefreshableState({required this.onRefresh, required this.child});
+  const _RefreshableState({
+    required this.onRefresh,
+    required this.child,
+    super.key,
+  });
 
   final RefreshCallback onRefresh;
   final Widget child;

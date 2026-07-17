@@ -58,22 +58,22 @@ void main() {
     );
     expect(body.maxLines, 2);
 
-    await tester.tap(find.byIcon(Icons.favorite_border));
-    await tester.pump();
-    expect(find.byIcon(Icons.favorite), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.favorite_border_rounded));
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.favorite_rounded), findsOneWidget);
 
     await tester.tap(find.text('Flutter patterns'));
     await tester.pumpAndSettle();
     expect(find.text('Post details'), findsOneWidget);
-    expect(find.byIcon(Icons.favorite), findsOneWidget);
+    expect(find.byIcon(Icons.favorite_rounded), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.favorite));
-    await tester.pump();
-    expect(find.byIcon(Icons.favorite_border), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.favorite_rounded));
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.favorite_border_rounded), findsOneWidget);
 
     Get.back<void>();
     await tester.pumpAndSettle();
-    expect(find.byIcon(Icons.favorite_border), findsOneWidget);
+    expect(find.byIcon(Icons.favorite_border_rounded), findsOneWidget);
   });
 
   testWidgets('shows an error and retries the request', (tester) async {

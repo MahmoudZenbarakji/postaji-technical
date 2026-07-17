@@ -11,9 +11,8 @@ final class PostSearchField extends StatelessWidget {
       onChanged: onChanged,
       textInputAction: TextInputAction.search,
       decoration: const InputDecoration(
-        hintText: 'Search posts',
-        prefixIcon: Icon(Icons.search),
-        border: OutlineInputBorder(),
+        hintText: 'Search by title or content',
+        prefixIcon: Icon(Icons.search_rounded),
       ),
     );
   }
