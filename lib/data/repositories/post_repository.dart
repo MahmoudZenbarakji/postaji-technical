@@ -1,10 +1,11 @@
+import '../models/comment.dart';
 import '../models/post.dart';
 import '../services/post_service.dart';
 
 abstract interface class PostRepository {
   Future<List<Post>> getPosts();
 
-  Future<Post> getPost(int id);
+  Future<List<Comment>> getComments(int postId);
 }
 
 final class PostRepositoryImpl implements PostRepository {
@@ -16,5 +17,5 @@ final class PostRepositoryImpl implements PostRepository {
   Future<List<Post>> getPosts() => _service.getPosts();
 
   @override
-  Future<Post> getPost(int id) => _service.getPost(id);
+  Future<List<Comment>> getComments(int postId) => _service.getComments(postId);
 }
